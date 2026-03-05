@@ -163,6 +163,19 @@ export function createApp(config: ServerConfig) {
         });
     });
 
+    // Favicon
+    app.get("/favicon.ico", async (c) => {
+        try {
+            const file = Bun.file("./public/icon.png");
+            return c.body(await file.arrayBuffer(), 200, {
+                "Content-Type": "image/png",
+                "Cache-Control": "public, max-age=604800",
+            });
+        } catch {
+            return c.notFound();
+        }
+    });
+
     // Health check
     app.get("/health", (c) => {
         return c.json({ status: "ok", timestamp: new Date().toISOString() });
