@@ -17,14 +17,16 @@ export function createApp(config: ServerConfig) {
     const app = new Hono<AppEnv>();
 
     // HTTPS redirect in production
+    // Skip when behind a reverse proxy (DO App Platform, etc.) that terminates TLS
     app.use("*", async (c, next) => {
         const proto = c.req.header("x-forwarded-proto");
         const host = c.req.header("host") || "";
         const isLocalhost =
             host.startsWith("localhost") ||
             host.startsWith("127.0.0.1");
+        const isBehindProxy = !!c.req.header("x-forwarded-for");
 
-        if (proto === "http" && !isLocalhost) {
+        if (proto === "http" && !isLocalhost && !isBehindProxy) {
             const httpsUrl = `https://${host}${c.req.path}`;
             return c.redirect(httpsUrl, 301);
         }
@@ -136,7 +138,9 @@ export function createApp(config: ServerConfig) {
 
     // OAuth metadata discovery
     app.get("/.well-known/oauth-authorization-server", (c) => {
-        const baseUrl = new URL(c.req.url).origin;
+        const proto = c.req.header("x-forwarded-proto") || "https";
+        const host = c.req.header("host") || new URL(c.req.url).host;
+        const baseUrl = `${proto}://${host}`;
         return c.json({
             issuer: baseUrl,
             authorization_endpoint: `${baseUrl}/authorize`,
