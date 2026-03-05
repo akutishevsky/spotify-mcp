@@ -511,6 +511,7 @@ export function createOAuthRouter(config: OAuthConfig) {
                 spotifyUserId: profile.id || "unknown",
                 expiresAt:
                     Date.now() + tokenData.expires_in * 1000,
+                grantedScopes: tokenData.scope || undefined,
             });
 
             logger.info("Token exchange completed successfully");

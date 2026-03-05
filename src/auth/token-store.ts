@@ -6,6 +6,7 @@ export interface TokenData {
     spotifyRefreshToken: string;
     spotifyUserId: string;
     expiresAt: number;
+    grantedScopes?: string;
 }
 
 interface McpTokenRow {
@@ -15,6 +16,7 @@ interface McpTokenRow {
     spotify_user_id: string;
     spotify_expires_at: number;
     expires_at: string;
+    granted_scopes: string | null;
 }
 
 const TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
@@ -40,6 +42,7 @@ class TokenStore {
                 ),
                 spotify_user_id: tokenData.spotifyUserId,
                 spotify_expires_at: tokenData.expiresAt,
+                granted_scopes: tokenData.grantedScopes || null,
                 expires_at: expiresAt,
                 updated_at: new Date().toISOString(),
             },
@@ -71,6 +74,7 @@ class TokenStore {
             spotifyRefreshToken: decrypt(row.encrypted_refresh_token),
             spotifyUserId: row.spotify_user_id,
             expiresAt: row.spotify_expires_at,
+            grantedScopes: row.granted_scopes || undefined,
         };
     }
 
