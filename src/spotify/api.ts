@@ -1,7 +1,7 @@
-import { tokenStore } from "../auth/token-store.js";
-import { refreshSpotifyToken } from "../auth/oauth.js";
-import { getOAuthConfig } from "../config.js";
-import { createLogger } from "../utils/logger.js";
+import { tokenStore } from "../auth/token-store.ts";
+import { refreshSpotifyToken } from "../auth/oauth.ts";
+import { getOAuthConfig } from "../config.ts";
+import { createLogger } from "../utils/logger.ts";
 
 const logger = createLogger({ component: "spotify-api" });
 const SPOTIFY_API_BASE = "https://api.spotify.com/v1";

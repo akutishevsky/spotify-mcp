@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { spotifyRequest } from "../spotify/api.js";
-import { withErrorHandling, READ_ANNOTATIONS, toolResponse } from "./index.js";
+import { spotifyRequest } from "../spotify/api.ts";
+import { withErrorHandling, READ_ANNOTATIONS, toolResponse } from "./index.ts";
 
 export function registerGenreTools(
     server: McpServer,

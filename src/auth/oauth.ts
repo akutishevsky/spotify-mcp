@@ -1,9 +1,9 @@
 import { Hono } from "hono";
-import { tokenStore } from "./token-store.js";
-import { getSupabaseClient } from "../db/supabase.js";
-import { createLogger } from "../utils/logger.js";
-import { encrypt, decrypt } from "../utils/encryption.js";
-import type { OAuthConfig } from "../config.js";
+import { tokenStore } from "./token-store.ts";
+import { getSupabaseClient } from "../db/supabase.ts";
+import { createLogger } from "../utils/logger.ts";
+import { encrypt, decrypt } from "../utils/encryption.ts";
+import type { OAuthConfig } from "../config.ts";
 
 const logger = createLogger({ component: "oauth" });
 

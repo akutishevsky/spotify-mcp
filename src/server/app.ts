@@ -1,11 +1,11 @@
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
-import { createOAuthRouter } from "../auth/oauth.js";
-import { authenticateBearer } from "./middleware.js";
-import { handleMcp } from "./mcp-endpoints.js";
-import type { AppEnv } from "../types/hono.js";
-import type { OAuthConfig } from "../config.js";
+import { createOAuthRouter } from "../auth/oauth.ts";
+import { authenticateBearer } from "./middleware.ts";
+import { handleMcp } from "./mcp-endpoints.ts";
+import type { AppEnv } from "../types/hono.ts";
+import type { OAuthConfig } from "../config.ts";
 
 export interface ServerConfig {
     oauthConfig: OAuthConfig;

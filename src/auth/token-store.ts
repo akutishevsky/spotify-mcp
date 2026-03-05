@@ -1,5 +1,5 @@
-import { getSupabaseClient } from "../db/supabase.js";
-import { encrypt, decrypt } from "../utils/encryption.js";
+import { getSupabaseClient } from "../db/supabase.ts";
+import { encrypt, decrypt } from "../utils/encryption.ts";
 
 export interface TokenData {
     spotifyAccessToken: string;

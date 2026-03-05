@@ -9,31 +9,29 @@ import {
     toolResponse,
 } from "./index.ts";
 
-export function registerAlbumTools(
+export function registerShowTools(
     server: McpServer,
     mcpAccessToken: string
 ) {
     server.registerTool(
-        "get_album",
+        "get_show",
         {
-            title: "Get Album",
+            title: "Get Show",
             description:
-                "Get Spotify catalog information for a single album.",
+                "Get Spotify catalog information for a single show (podcast).",
             inputSchema: {
-                id: z.string().describe("The Spotify ID of the album."),
+                id: z.string().describe("The Spotify ID of the show."),
                 market: z
                     .string()
                     .optional()
-                    .describe(
-                        "An ISO 3166-1 alpha-2 country code to apply Track Relinking."
-                    ),
+                    .describe("An ISO 3166-1 alpha-2 country code."),
             },
             annotations: READ_ANNOTATIONS,
         },
         (args) =>
-            withErrorHandling("get_album", async () => {
+            withErrorHandling("get_show", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: `/albums/${args.id}`,
+                    path: `/shows/${args.id}`,
                     query: { market: args.market },
                 });
                 return toolResponse(data);
@@ -41,16 +39,16 @@ export function registerAlbumTools(
     );
 
     server.registerTool(
-        "get_several_albums",
+        "get_several_shows",
         {
-            title: "Get Several Albums",
+            title: "Get Several Shows",
             description:
-                "Get Spotify catalog information for multiple albums identified by their Spotify IDs.",
+                "Get Spotify catalog information for several shows.",
             inputSchema: {
                 ids: z
                     .string()
                     .describe(
-                        "Comma-separated list of Spotify album IDs (max 20)."
+                        "Comma-separated list of Spotify show IDs (max 50)."
                     ),
                 market: z
                     .string()
@@ -60,9 +58,9 @@ export function registerAlbumTools(
             annotations: READ_ANNOTATIONS,
         },
         (args) =>
-            withErrorHandling("get_several_albums", async () => {
+            withErrorHandling("get_several_shows", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/albums",
+                    path: "/shows",
                     query: { ids: args.ids, market: args.market },
                 });
                 return toolResponse(data);
@@ -70,13 +68,13 @@ export function registerAlbumTools(
     );
 
     server.registerTool(
-        "get_album_tracks",
+        "get_show_episodes",
         {
-            title: "Get Album Tracks",
+            title: "Get Show Episodes",
             description:
-                "Get Spotify catalog information about an album's tracks.",
+                "Get Spotify catalog information about a show's episodes.",
             inputSchema: {
-                id: z.string().describe("The Spotify ID of the album."),
+                id: z.string().describe("The Spotify ID of the show."),
                 market: z
                     .string()
                     .optional()
@@ -97,9 +95,9 @@ export function registerAlbumTools(
             annotations: READ_ANNOTATIONS,
         },
         (args) =>
-            withErrorHandling("get_album_tracks", async () => {
+            withErrorHandling("get_show_episodes", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: `/albums/${args.id}/tracks`,
+                    path: `/shows/${args.id}/episodes`,
                     query: {
                         market: args.market,
                         limit: args.limit,
@@ -111,11 +109,11 @@ export function registerAlbumTools(
     );
 
     server.registerTool(
-        "get_saved_albums",
+        "get_saved_shows",
         {
-            title: "Get User's Saved Albums",
+            title: "Get User's Saved Shows",
             description:
-                "Get a list of the albums saved in the current Spotify user's library.",
+                "Get a list of shows saved in the current user's library.",
             inputSchema: {
                 limit: z
                     .number()
@@ -129,21 +127,16 @@ export function registerAlbumTools(
                     .describe(
                         "Index of the first item to return (default 0)."
                     ),
-                market: z
-                    .string()
-                    .optional()
-                    .describe("An ISO 3166-1 alpha-2 country code."),
             },
             annotations: READ_ANNOTATIONS,
         },
         (args) =>
-            withErrorHandling("get_saved_albums", async () => {
+            withErrorHandling("get_saved_shows", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/me/albums",
+                    path: "/me/shows",
                     query: {
                         limit: args.limit,
                         offset: args.offset,
-                        market: args.market,
                     },
                 });
                 return toolResponse(data);
@@ -151,76 +144,25 @@ export function registerAlbumTools(
     );
 
     server.registerTool(
-        "save_albums",
+        "save_shows",
         {
-            title: "Save Albums for Current User",
+            title: "Save Shows for Current User",
             description:
-                "Save one or more albums to the current user's library.",
+                "Save one or more shows to the current user's library.",
             inputSchema: {
                 ids: z
                     .string()
                     .describe(
-                        "Comma-separated list of Spotify album IDs (max 20)."
+                        "Comma-separated list of Spotify show IDs (max 50)."
                     ),
             },
             annotations: WRITE_ANNOTATIONS,
         },
         (args) =>
-            withErrorHandling("save_albums", async () => {
+            withErrorHandling("save_shows", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: "/me/albums",
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
-                });
-                return toolResponse(data);
-            })
-    );
-
-    server.registerTool(
-        "remove_saved_albums",
-        {
-            title: "Remove Saved Albums",
-            description:
-                "Remove one or more albums from the current user's library.",
-            inputSchema: {
-                ids: z
-                    .string()
-                    .describe(
-                        "Comma-separated list of Spotify album IDs (max 20)."
-                    ),
-            },
-            annotations: DELETE_ANNOTATIONS,
-        },
-        (args) =>
-            withErrorHandling("remove_saved_albums", async () => {
-                const data = await spotifyRequest(mcpAccessToken, {
-                    method: "DELETE",
-                    path: "/me/albums",
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
-                });
-                return toolResponse(data);
-            })
-    );
-
-    server.registerTool(
-        "check_saved_albums",
-        {
-            title: "Check User's Saved Albums",
-            description:
-                "Check if one or more albums are already saved in the current user's library.",
-            inputSchema: {
-                ids: z
-                    .string()
-                    .describe(
-                        "Comma-separated list of Spotify album IDs (max 20)."
-                    ),
-            },
-            annotations: READ_ANNOTATIONS,
-        },
-        (args) =>
-            withErrorHandling("check_saved_albums", async () => {
-                const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/me/albums/contains",
+                    path: "/me/shows",
                     query: { ids: args.ids },
                 });
                 return toolResponse(data);
@@ -228,35 +170,55 @@ export function registerAlbumTools(
     );
 
     server.registerTool(
-        "get_new_releases",
+        "remove_saved_shows",
         {
-            title: "Get New Releases",
+            title: "Remove Saved Shows",
             description:
-                "Get a list of new album releases featured in Spotify.",
+                "Remove one or more shows from the current user's library.",
             inputSchema: {
-                limit: z
-                    .number()
-                    .optional()
+                ids: z
+                    .string()
                     .describe(
-                        "Maximum number of items to return (1-50, default 20)."
+                        "Comma-separated list of Spotify show IDs (max 50)."
                     ),
-                offset: z
-                    .number()
+                market: z
+                    .string()
                     .optional()
+                    .describe("An ISO 3166-1 alpha-2 country code."),
+            },
+            annotations: DELETE_ANNOTATIONS,
+        },
+        (args) =>
+            withErrorHandling("remove_saved_shows", async () => {
+                const data = await spotifyRequest(mcpAccessToken, {
+                    method: "DELETE",
+                    path: "/me/shows",
+                    query: { ids: args.ids, market: args.market },
+                });
+                return toolResponse(data);
+            })
+    );
+
+    server.registerTool(
+        "check_saved_shows",
+        {
+            title: "Check User's Saved Shows",
+            description:
+                "Check if one or more shows are saved in the current user's library.",
+            inputSchema: {
+                ids: z
+                    .string()
                     .describe(
-                        "Index of the first item to return (default 0)."
+                        "Comma-separated list of Spotify show IDs (max 50)."
                     ),
             },
             annotations: READ_ANNOTATIONS,
         },
         (args) =>
-            withErrorHandling("get_new_releases", async () => {
+            withErrorHandling("check_saved_shows", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/browse/new-releases",
-                    query: {
-                        limit: args.limit,
-                        offset: args.offset,
-                    },
+                    path: "/me/shows/contains",
+                    query: { ids: args.ids },
                 });
                 return toolResponse(data);
             })

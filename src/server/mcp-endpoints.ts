@@ -1,8 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
-import { registerAllTools } from "../tools/index.js";
-import { createLogger } from "../utils/logger.js";
-import type { AppContext } from "../types/hono.js";
+import { registerAllTools } from "../tools/index.ts";
+import { createLogger } from "../utils/logger.ts";
+import type { AppContext } from "../types/hono.ts";
 
 const logger = createLogger({ component: "mcp-endpoints" });
 

@@ -1,20 +1,20 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { registerAlbumTools } from "./albums.js";
-import { registerArtistTools } from "./artists.js";
-import { registerAudiobookTools } from "./audiobooks.js";
-import { registerCategoryTools } from "./categories.js";
-import { registerChapterTools } from "./chapters.js";
-import { registerEpisodeTools } from "./episodes.js";
-import { registerGenreTools } from "./genres.js";
-import { registerLibraryTools } from "./library.js";
-import { registerMarketTools } from "./markets.js";
-import { registerPlayerTools } from "./player.js";
-import { registerPlaylistTools } from "./playlists.js";
-import { registerSearchTools } from "./search.js";
-import { registerShowTools } from "./shows.js";
-import { registerTrackTools } from "./tracks.js";
-import { registerUserTools } from "./users.js";
-import { createLogger } from "../utils/logger.js";
+import { registerAlbumTools } from "./albums.ts";
+import { registerArtistTools } from "./artists.ts";
+import { registerAudiobookTools } from "./audiobooks.ts";
+import { registerCategoryTools } from "./categories.ts";
+import { registerChapterTools } from "./chapters.ts";
+import { registerEpisodeTools } from "./episodes.ts";
+import { registerGenreTools } from "./genres.ts";
+import { registerLibraryTools } from "./library.ts";
+import { registerMarketTools } from "./markets.ts";
+import { registerPlayerTools } from "./player.ts";
+import { registerPlaylistTools } from "./playlists.ts";
+import { registerSearchTools } from "./search.ts";
+import { registerShowTools } from "./shows.ts";
+import { registerTrackTools } from "./tracks.ts";
+import { registerUserTools } from "./users.ts";
+import { createLogger } from "../utils/logger.ts";
 
 const analyticsLogger = createLogger({ component: "tools" });
 

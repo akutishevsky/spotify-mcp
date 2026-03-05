@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { spotifyRequest } from "../spotify/api.js";
+import { spotifyRequest } from "../spotify/api.ts";
 import {
     withErrorHandling,
     WRITE_ANNOTATIONS,
     DELETE_ANNOTATIONS,
     READ_ANNOTATIONS,
     toolResponse,
-} from "./index.js";
+} from "./index.ts";
 
 export function registerLibraryTools(
     server: McpServer,

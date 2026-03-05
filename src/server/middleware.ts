@@ -1,6 +1,6 @@
-import { tokenStore } from "../auth/token-store.js";
-import { createLogger } from "../utils/logger.js";
-import type { AppContext, AppNext } from "../types/hono.js";
+import { tokenStore } from "../auth/token-store.ts";
+import { createLogger } from "../utils/logger.ts";
+import type { AppContext, AppNext } from "../types/hono.ts";
 
 const logger = createLogger({ component: "middleware" });
 
