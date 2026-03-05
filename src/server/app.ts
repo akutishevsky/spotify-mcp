@@ -49,7 +49,7 @@ export function createApp(config: ServerConfig) {
         c.header("X-Frame-Options", "DENY");
         c.header(
             "Content-Security-Policy",
-            "default-src 'none'; frame-ancestors 'none'"
+            "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self'; connect-src 'self'; frame-ancestors 'none'"
         );
         c.header("Referrer-Policy", "no-referrer");
         c.header(
