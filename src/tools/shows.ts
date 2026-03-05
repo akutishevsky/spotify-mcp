@@ -160,10 +160,14 @@ export function registerShowTools(
         },
         (args) =>
             withErrorHandling("save_shows", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:show:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: "/me/shows",
-                    query: { ids: args.ids },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -190,10 +194,14 @@ export function registerShowTools(
         },
         (args) =>
             withErrorHandling("remove_saved_shows", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:show:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "DELETE",
-                    path: "/me/shows",
-                    query: { ids: args.ids, market: args.market },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -216,9 +224,13 @@ export function registerShowTools(
         },
         (args) =>
             withErrorHandling("check_saved_shows", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:show:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/me/shows/contains",
-                    query: { ids: args.ids },
+                    path: "/me/library/contains",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })

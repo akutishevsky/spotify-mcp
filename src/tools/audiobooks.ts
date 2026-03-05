@@ -164,10 +164,14 @@ export function registerAudiobookTools(
         },
         (args) =>
             withErrorHandling("save_audiobooks", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:audiobook:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: "/me/audiobooks",
-                    query: { ids: args.ids },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -190,10 +194,14 @@ export function registerAudiobookTools(
         },
         (args) =>
             withErrorHandling("remove_saved_audiobooks", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:audiobook:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "DELETE",
-                    path: "/me/audiobooks",
-                    query: { ids: args.ids },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -216,9 +224,13 @@ export function registerAudiobookTools(
         },
         (args) =>
             withErrorHandling("check_saved_audiobooks", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:audiobook:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/me/audiobooks/contains",
-                    query: { ids: args.ids },
+                    path: "/me/library/contains",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })

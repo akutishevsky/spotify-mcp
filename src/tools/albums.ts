@@ -167,10 +167,14 @@ export function registerAlbumTools(
         },
         (args) =>
             withErrorHandling("save_albums", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:album:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: "/me/albums",
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -193,10 +197,14 @@ export function registerAlbumTools(
         },
         (args) =>
             withErrorHandling("remove_saved_albums", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:album:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "DELETE",
-                    path: "/me/albums",
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -219,9 +227,13 @@ export function registerAlbumTools(
         },
         (args) =>
             withErrorHandling("check_saved_albums", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:album:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/me/albums/contains",
-                    query: { ids: args.ids },
+                    path: "/me/library/contains",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })

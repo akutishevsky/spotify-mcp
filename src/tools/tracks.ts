@@ -124,10 +124,14 @@ export function registerTrackTools(
         },
         (args) =>
             withErrorHandling("save_tracks", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:track:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: "/me/tracks",
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -138,22 +142,26 @@ export function registerTrackTools(
         {
             title: "Remove Saved Tracks",
             description:
-                "Remove one or more tracks from the current user's library.",
+                "Remove one or more tracks from the current user's library. Pass Spotify track IDs (not URIs) — they will be converted automatically.",
             inputSchema: {
                 ids: z
                     .string()
                     .describe(
-                        "Comma-separated list of Spotify track IDs (max 50)."
+                        "Comma-separated list of Spotify track IDs (max 40)."
                     ),
             },
             annotations: DELETE_ANNOTATIONS,
         },
         (args) =>
             withErrorHandling("remove_saved_tracks", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:track:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "DELETE",
-                    path: "/me/tracks",
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -176,9 +184,13 @@ export function registerTrackTools(
         },
         (args) =>
             withErrorHandling("check_saved_tracks", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:track:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/me/tracks/contains",
-                    query: { ids: args.ids },
+                    path: "/me/library/contains",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })

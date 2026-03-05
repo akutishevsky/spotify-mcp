@@ -126,10 +126,14 @@ export function registerEpisodeTools(
         },
         (args) =>
             withErrorHandling("save_episodes", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:episode:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: "/me/episodes",
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -152,10 +156,14 @@ export function registerEpisodeTools(
         },
         (args) =>
             withErrorHandling("remove_saved_episodes", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:episode:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "DELETE",
-                    path: "/me/episodes",
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -178,9 +186,13 @@ export function registerEpisodeTools(
         },
         (args) =>
             withErrorHandling("check_saved_episodes", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:episode:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/me/episodes/contains",
-                    query: { ids: args.ids },
+                    path: "/me/library/contains",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
