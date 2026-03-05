@@ -23,17 +23,38 @@
 
     <div class="info">
       <p>
-        This is a <strong>Model Context Protocol (MCP)</strong> server providing
-        full coverage of the Spotify Web API &mdash; 85+ tools across 15
+        A <strong>Model Context Protocol (MCP)</strong> server providing
+        full coverage of the Spotify Web API &mdash; 92 tools across 16
         categories including playback control, library management, playlists,
         search, and more.
       </p>
     </div>
 
-    <p>For setup instructions, documentation, and source code:</p>
+    <div class="setup">
+      <h2>Quick Setup</h2>
+
+      <h3>Claude.ai</h3>
+      <ol>
+        <li>Go to <strong>Customize</strong> &gt; <strong>Connectors</strong> &gt; <strong>Add Custom Connector</strong></li>
+        <li>Set <strong>Name</strong> to <code>Spotify</code> and <strong>URL</strong> to <code>https://sptfy-mcp.online/mcp</code></li>
+        <li>Save and authorize with your Spotify account</li>
+      </ol>
+
+      <h3>Claude Desktop / Claude Code / Cursor</h3>
+      <p>Add to your MCP client config:</p>
+      <pre><code>{
+  "mcpServers": {
+    "spotify": {
+      "type": "streamable-http",
+      "url": "https://sptfy-mcp.online/mcp"
+    }
+  }
+}</code></pre>
+    </div>
+
     <p>
       <a href="https://github.com/akutishevsky/spotify-mcp" target="_blank"
-        >github.com/akutishevsky/spotify-mcp</a
+        >GitHub &rarr; akutishevsky/spotify-mcp</a
       >
     </p>
 
