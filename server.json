@@ -3,7 +3,11 @@
     "name": "io.github.akutishevsky/spotify",
     "title": "Spotify",
     "version": "1.0.0",
-    "description": "Full Spotify Web API coverage via MCP - albums, artists, playlists, player controls, library management, and more.",
+    "description": "Full Spotify Web API coverage - albums, artists, playlists, player controls, and more.",
+    "repository": {
+        "url": "https://github.com/akutishevsky/spotify-mcp",
+        "source": "github"
+    },
     "remotes": [
         {
             "type": "streamable-http",
