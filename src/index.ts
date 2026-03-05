@@ -3,6 +3,7 @@ import { initOAuthStore } from "./auth/oauth.ts";
 import { tokenStore } from "./auth/token-store.ts";
 import { createApp } from "./server/app.ts";
 import { setOAuthConfig } from "./config.ts";
+import { startCleanupScheduler } from "./db/cleanup.ts";
 
 // Initialize Supabase first (required by all stores)
 await initSupabase();
@@ -37,6 +38,9 @@ setOAuthConfig(oauthConfig);
 
 // Create and configure the app
 const app = createApp({ oauthConfig });
+
+// Start background cleanup for expired records
+startCleanupScheduler();
 
 const port = parseInt(process.env.PORT || "3000", 10);
 
