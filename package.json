@@ -7,7 +7,8 @@
     "dev": "bun --hot src/index.ts",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "generate:secret": "openssl rand -hex 32"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
