@@ -184,9 +184,9 @@ export function createApp(config: ServerConfig) {
     // Favicon
     app.get("/favicon.ico", async (c) => {
         try {
-            const file = Bun.file("./public/icon.png");
+            const file = Bun.file("./public/favicon.ico");
             return c.body(await file.arrayBuffer(), 200, {
-                "Content-Type": "image/png",
+                "Content-Type": "image/x-icon",
                 "Cache-Control": "public, max-age=604800",
             });
         } catch {
