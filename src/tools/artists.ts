@@ -127,23 +127,4 @@ export function registerArtistTools(
             })
     );
 
-    server.registerTool(
-        "get_artist_related_artists",
-        {
-            title: "Get Artist's Related Artists",
-            description:
-                "Get Spotify catalog information about artists similar to a given artist.",
-            inputSchema: {
-                id: z.string().describe("The Spotify ID of the artist."),
-            },
-            annotations: READ_ANNOTATIONS,
-        },
-        (args) =>
-            withErrorHandling("get_artist_related_artists", async () => {
-                const data = await spotifyRequest(mcpAccessToken, {
-                    path: `/artists/${args.id}/related-artists`,
-                });
-                return toolResponse(data);
-            })
-    );
 }

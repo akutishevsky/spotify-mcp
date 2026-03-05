@@ -239,38 +239,4 @@ export function registerAlbumTools(
             })
     );
 
-    server.registerTool(
-        "get_new_releases",
-        {
-            title: "Get New Releases",
-            description:
-                "Get a list of new album releases featured in Spotify.",
-            inputSchema: {
-                limit: z
-                    .number()
-                    .optional()
-                    .describe(
-                        "Maximum number of items to return (1-50, default 20)."
-                    ),
-                offset: z
-                    .number()
-                    .optional()
-                    .describe(
-                        "Index of the first item to return (default 0)."
-                    ),
-            },
-            annotations: READ_ANNOTATIONS,
-        },
-        (args) =>
-            withErrorHandling("get_new_releases", async () => {
-                const data = await spotifyRequest(mcpAccessToken, {
-                    path: "/browse/new-releases",
-                    query: {
-                        limit: args.limit,
-                        offset: args.offset,
-                    },
-                });
-                return toolResponse(data);
-            })
-    );
 }

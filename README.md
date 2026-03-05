@@ -31,7 +31,7 @@ On first connection you'll be guided through Spotify authorization — no API ke
 
 ## Features
 
-- **92 tools** covering 100% of the Spotify Web API
+- **80 tools** covering the Spotify Web API
 - **Remote MCP** via Streamable HTTP transport — no local install required
 - **OAuth2 proxy** with PKCE support and dynamic client registration
 - **Automatic token refresh** — Spotify tokens are refreshed transparently
@@ -45,21 +45,19 @@ On first connection you'll be guided through Spotify authorization — no API ke
 
 | Category | Tools | Examples |
 |---|---|---|
-| Albums | 8 | Get album, saved albums, new releases |
-| Artists | 5 | Get artist, top tracks, related artists |
+| Albums | 7 | Get album, saved albums, save/remove/check |
+| Artists | 4 | Get artist, top tracks, albums |
 | Audiobooks | 7 | Get audiobook, chapters, save/remove |
-| Categories | 2 | Browse categories |
 | Chapters | 2 | Get chapter details |
 | Episodes | 6 | Get episode, save/remove/check |
-| Genres | 1 | Available genre seeds |
 | Library | 3 | Save/remove/check library items (unified) |
 | Markets | 1 | Available markets |
 | Player | 15 | Play, pause, skip, seek, queue, devices, volume |
-| Playlists | 16 | Create, modify, add/remove items, cover images |
+| Playlists | 12 | Create, modify, add/remove items, cover images |
 | Search | 1 | Search with field filters across all types |
 | Shows | 7 | Get show, episodes, save/remove/check |
-| Tracks | 11 | Get track, audio features/analysis, recommendations |
-| Users | 11 | Profile, top items, follow/unfollow |
+| Tracks | 6 | Get track, saved tracks, save/remove/check |
+| Users | 10 | Profile, top items, follow/unfollow |
 
 All save/remove/check library operations use the new unified Spotify `/me/library` endpoint with Spotify URIs.
 

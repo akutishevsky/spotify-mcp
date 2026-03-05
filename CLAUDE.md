@@ -34,10 +34,10 @@ src/
 │   └── cleanup.ts        # Scheduled cleanup (24h) for expired data
 ├── spotify/
 │   └── api.ts            # Spotify API client with auto token refresh
-├── tools/                # 16 tool modules (85+ tools total)
+├── tools/                # 13 tool modules (80 tools total)
 │   ├── index.ts          # Tool registration hub + analytics + annotations
-│   ├── albums.ts, artists.ts, audiobooks.ts, categories.ts,
-│   ├── chapters.ts, episodes.ts, genres.ts, library.ts,
+│   ├── albums.ts, artists.ts, audiobooks.ts,
+│   ├── chapters.ts, episodes.ts, library.ts,
 │   ├── markets.ts, player.ts, playlists.ts, search.ts,
 │   ├── shows.ts, tracks.ts, users.ts
 ├── types/
