@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spotify MCP Server</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/styles/index.css" />
+  </head>
+  <body>
+    <h1>Spotify MCP Server</h1>
+    <p class="subtitle">
+      Model Context Protocol server for the Spotify Web API
+    </p>
+
+    <div class="status-card" id="health">
+      <div class="status-header">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">Checking...</span>
+      </div>
+      <div class="status-details" id="status-details"></div>
+    </div>
+
+    <div class="info">
+      <p>
+        This is a <strong>Model Context Protocol (MCP)</strong> server providing
+        full coverage of the Spotify Web API &mdash; 85+ tools across 15
+        categories including playback control, library management, playlists,
+        search, and more.
+      </p>
+    </div>
+
+    <p>For setup instructions, documentation, and source code:</p>
+    <p>
+      <a href="https://github.com/akutishevsky/spotify-mcp" target="_blank"
+        >github.com/akutishevsky/spotify-mcp</a
+      >
+    </p>
+
+    <div class="footer">
+      <p>Endpoints:</p>
+      <ul>
+        <li>
+          <a href="/.well-known/oauth-authorization-server">OAuth metadata</a>
+        </li>
+        <li><a href="/health">Health check</a></li>
+      </ul>
+    </div>
+
+    <script>
+      async function checkHealth() {
+        const dot = document.getElementById("status-dot");
+        const text = document.getElementById("status-text");
+        const details = document.getElementById("status-details");
+
+        try {
+          const start = performance.now();
+          const res = await fetch("/health");
+          const latency = Math.round(performance.now() - start);
+          const data = await res.json();
+
+          if (res.ok && data.status === "ok") {
+            dot.classList.add("online");
+            text.textContent = "Online";
+            details.textContent = `Response: ${latency}ms`;
+          } else {
+            dot.classList.add("offline");
+            text.textContent = "Degraded";
+            details.textContent = "Health check returned unexpected status";
+          }
+        } catch {
+          dot.classList.add("offline");
+          text.textContent = "Offline";
+          details.textContent = "Could not reach health endpoint";
+        }
+      }
+
+      checkHealth();
+      setInterval(checkHealth, 30000);
+    </script>
+  </body>
+</html>

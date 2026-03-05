@@ -119,15 +119,33 @@ export function createApp(config: ServerConfig) {
         })
     );
 
-    // Root
-    app.get("/", (c) => {
-        return c.json({
-            name: "spotify-mcp",
-            version: "1.0.0",
-            description:
-                "Spotify MCP Server - Full Web API coverage",
-            mcp_endpoint: "/mcp",
-        });
+    // Landing page
+    app.get("/", async (c) => {
+        try {
+            const file = Bun.file("./public/index.html");
+            return c.html(await file.text());
+        } catch {
+            return c.json({
+                name: "spotify-mcp",
+                version: "1.0.0",
+                description:
+                    "Spotify MCP Server - Full Web API coverage",
+                mcp_endpoint: "/mcp",
+            });
+        }
+    });
+
+    // Static assets
+    app.get("/styles/:file", async (c) => {
+        try {
+            const file = Bun.file(`./public/styles/${c.req.param("file")}`);
+            return c.body(await file.arrayBuffer(), 200, {
+                "Content-Type": "text/css",
+                "Cache-Control": "public, max-age=604800",
+            });
+        } catch {
+            return c.notFound();
+        }
     });
 
     // OAuth routes
