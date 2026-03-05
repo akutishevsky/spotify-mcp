@@ -40,10 +40,9 @@ const app = createApp({ oauthConfig });
 
 const port = parseInt(process.env.PORT || "3000", 10);
 
-// Use Bun.serve for the HTTP server
-Bun.serve({
+console.log(`Spotify MCP server running on port ${port}`);
+
+export default {
     port,
     fetch: app.fetch,
-});
-
-console.log(`Spotify MCP server running on port ${port}`);
+};
