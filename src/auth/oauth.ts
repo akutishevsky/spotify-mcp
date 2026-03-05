@@ -356,6 +356,7 @@ export function createOAuthRouter(config: OAuthConfig) {
         );
         spotifyAuthUrl.searchParams.append("scope", SPOTIFY_SCOPES);
         spotifyAuthUrl.searchParams.append("state", internalState);
+        spotifyAuthUrl.searchParams.append("show_dialog", "true");
 
         return c.redirect(spotifyAuthUrl.toString());
     });
