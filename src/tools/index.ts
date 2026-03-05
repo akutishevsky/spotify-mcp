@@ -14,6 +14,7 @@ import { registerSearchTools } from "./search.ts";
 import { registerShowTools } from "./shows.ts";
 import { registerTrackTools } from "./tracks.ts";
 import { registerUserTools } from "./users.ts";
+import { encode } from "@toon-format/toon";
 import { createLogger } from "../utils/logger.ts";
 import { getSupabaseClient } from "../db/supabase.ts";
 import { tokenStore } from "../auth/token-store.ts";
@@ -74,7 +75,7 @@ interface ToolResponse {
 export function toolResponse(data: unknown): ToolResponse {
     return {
         content: [
-            { type: "text", text: JSON.stringify(data, null, 2) },
+            { type: "text", text: encode(data) },
         ],
     };
 }
