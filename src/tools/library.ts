@@ -18,17 +18,12 @@ export function registerLibraryTools(
         {
             title: "Save Items to Library",
             description:
-                "Save items (albums, tracks, episodes, audiobooks, shows) to the current user's library. This is a generic endpoint - for type-specific operations, use the dedicated save tools.",
+                "Save items to the current user's library using Spotify URIs. Supports tracks, albums, episodes, shows, audiobooks, users, and playlists (max 40).",
             inputSchema: {
-                type: z
+                uris: z
                     .string()
                     .describe(
-                        "The type of items to save: albums, tracks, episodes, audiobooks, or shows."
-                    ),
-                ids: z
-                    .string()
-                    .describe(
-                        "Comma-separated list of Spotify IDs."
+                        "Comma-separated list of Spotify URIs (max 40). Example: 'spotify:track:4iV5W9uYEdYUVa79Axb7Rh,spotify:album:1Je1IMUlBXcx1Fz0WE7oPT'."
                     ),
             },
             annotations: WRITE_ANNOTATIONS,
@@ -37,8 +32,8 @@ export function registerLibraryTools(
             withErrorHandling("save_library_items", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: `/me/${args.type}`,
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
+                    path: "/me/library",
+                    query: { uris: args.uris },
                 });
                 return toolResponse(data);
             })
@@ -49,17 +44,12 @@ export function registerLibraryTools(
         {
             title: "Remove Items from Library",
             description:
-                "Remove items (albums, tracks, episodes, audiobooks, shows) from the current user's library.",
+                "Remove items from the current user's library using Spotify URIs (max 40).",
             inputSchema: {
-                type: z
+                uris: z
                     .string()
                     .describe(
-                        "The type of items to remove: albums, tracks, episodes, audiobooks, or shows."
-                    ),
-                ids: z
-                    .string()
-                    .describe(
-                        "Comma-separated list of Spotify IDs."
+                        "Comma-separated list of Spotify URIs (max 40)."
                     ),
             },
             annotations: DELETE_ANNOTATIONS,
@@ -68,8 +58,8 @@ export function registerLibraryTools(
             withErrorHandling("remove_library_items", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "DELETE",
-                    path: `/me/${args.type}`,
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
+                    path: "/me/library",
+                    query: { uris: args.uris },
                 });
                 return toolResponse(data);
             })
@@ -80,17 +70,12 @@ export function registerLibraryTools(
         {
             title: "Check User's Saved Items",
             description:
-                "Check if items (albums, tracks, episodes, audiobooks, shows) are saved in the current user's library.",
+                "Check if items are saved in the current user's library using Spotify URIs (max 40).",
             inputSchema: {
-                type: z
+                uris: z
                     .string()
                     .describe(
-                        "The type of items to check: albums, tracks, episodes, audiobooks, or shows."
-                    ),
-                ids: z
-                    .string()
-                    .describe(
-                        "Comma-separated list of Spotify IDs."
+                        "Comma-separated list of Spotify URIs (max 40)."
                     ),
             },
             annotations: READ_ANNOTATIONS,
@@ -98,8 +83,8 @@ export function registerLibraryTools(
         (args) =>
             withErrorHandling("check_library_contains", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: `/me/${args.type}/contains`,
-                    query: { ids: args.ids },
+                    path: "/me/library/contains",
+                    query: { uris: args.uris },
                 });
                 return toolResponse(data);
             })

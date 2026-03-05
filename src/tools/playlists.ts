@@ -154,7 +154,7 @@ export function registerPlaylistTools(
         (args) =>
             withErrorHandling("get_playlist_items", async () => {
                 const data = await spotifyRequest(mcpAccessToken, {
-                    path: `/playlists/${args.playlist_id}/tracks`,
+                    path: `/playlists/${args.playlist_id}/items`,
                     query: {
                         market: args.market,
                         fields: args.fields,
@@ -225,7 +225,7 @@ export function registerPlaylistTools(
 
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: `/playlists/${args.playlist_id}/tracks`,
+                    path: `/playlists/${args.playlist_id}/items`,
                     body,
                 });
                 return toolResponse(data);
@@ -266,7 +266,7 @@ export function registerPlaylistTools(
 
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "POST",
-                    path: `/playlists/${args.playlist_id}/tracks`,
+                    path: `/playlists/${args.playlist_id}/items`,
                     body,
                 });
                 return toolResponse(data);
@@ -307,7 +307,7 @@ export function registerPlaylistTools(
 
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "DELETE",
-                    path: `/playlists/${args.playlist_id}/tracks`,
+                    path: `/playlists/${args.playlist_id}/items`,
                     body,
                 });
                 return toolResponse(data);

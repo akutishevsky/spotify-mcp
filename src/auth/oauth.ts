@@ -26,6 +26,7 @@ const SPOTIFY_SCOPES = [
     "user-modify-playback-state",
     "user-read-currently-playing",
     "user-read-recently-played",
+    "user-read-playback-position",
     "user-top-read",
     "user-follow-read",
     "user-follow-modify",
