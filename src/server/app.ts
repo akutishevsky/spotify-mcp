@@ -138,8 +138,11 @@ export function createApp(config: ServerConfig) {
 
     // OAuth metadata discovery
     app.get("/.well-known/oauth-authorization-server", (c) => {
-        const proto = c.req.header("x-forwarded-proto") || "https";
         const host = c.req.header("host") || new URL(c.req.url).host;
+        const isLocalhost =
+            host.startsWith("localhost") ||
+            host.startsWith("127.0.0.1");
+        const proto = isLocalhost ? "http" : "https";
         const baseUrl = `${proto}://${host}`;
         return c.json({
             issuer: baseUrl,
