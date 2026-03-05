@@ -7,7 +7,7 @@
     "remotes": [
         {
             "type": "streamable-http",
-            "url": "https://spotify-mcp.com/mcp"
+            "url": "https://sptfy-mcp.online/mcp"
         }
     ]
 }

@@ -116,7 +116,7 @@ Add to your MCP settings:
   "mcpServers": {
     "spotify": {
       "type": "streamable-http",
-      "url": "http://localhost:3000/mcp"
+      "url": "https://sptfy-mcp.online/mcp"
     }
   }
 }
