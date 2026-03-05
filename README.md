@@ -4,9 +4,34 @@ A remote [Model Context Protocol](https://modelcontextprotocol.io) server that p
 
 **Live server:** [sptfy-mcp.online](https://sptfy-mcp.online)
 
+## Quick Setup
+
+### Claude.ai
+
+1. Go to **Customize** > **Connectors** > **Add Custom Connector**
+2. Set **Name** to `Spotify` and **URL** to `https://sptfy-mcp.online/mcp`
+3. Save and authorize with your Spotify account
+
+### Claude Desktop / Claude Code / Cursor
+
+Add to your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "spotify": {
+      "type": "streamable-http",
+      "url": "https://sptfy-mcp.online/mcp"
+    }
+  }
+}
+```
+
+On first connection you'll be guided through Spotify authorization — no API keys or local setup needed.
+
 ## Features
 
-- **85+ tools** covering 100% of the Spotify Web API
+- **92 tools** covering 100% of the Spotify Web API
 - **Remote MCP** via Streamable HTTP transport — no local install required
 - **OAuth2 proxy** with PKCE support and dynamic client registration
 - **Automatic token refresh** — Spotify tokens are refreshed transparently
@@ -115,25 +140,6 @@ MCP Client                    Spotify MCP Server                 Spotify
     |-- POST /mcp (with Bearer) -->|-- Spotify API calls -------->|
     |<-- tool results -------------|<-- API responses ------------|
 ```
-
-## MCP Client Configuration
-
-### Claude Desktop / Claude Code
-
-Add to your MCP settings:
-
-```json
-{
-  "mcpServers": {
-    "spotify": {
-      "type": "streamable-http",
-      "url": "https://sptfy-mcp.online/mcp"
-    }
-  }
-}
-```
-
-The client will be guided through OAuth registration and authorization on first connection.
 
 ## API Endpoints
 
