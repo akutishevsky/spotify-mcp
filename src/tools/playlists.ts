@@ -395,7 +395,7 @@ export function registerPlaylistTools(
         {
             title: "Create Playlist",
             description:
-                "Create a playlist for the current user.",
+                "Create a playlist for the current user. The playlist will be empty until you add tracks.",
             inputSchema: {
                 name: z.string().describe("The name for the new playlist."),
                 public: z
@@ -408,7 +408,7 @@ export function registerPlaylistTools(
                     .boolean()
                     .optional()
                     .describe(
-                        "If true, the playlist will be collaborative (default false)."
+                        "If true, the playlist will be collaborative (default false). Requires public to be false."
                     ),
                 description: z
                     .string()
@@ -419,12 +419,6 @@ export function registerPlaylistTools(
         },
         (args) =>
             withErrorHandling("create_playlist", async () => {
-                // First get current user ID
-                const me = await spotifyRequest<{ id: string }>(
-                    mcpAccessToken,
-                    { path: "/me" }
-                );
-
                 const body: Record<string, unknown> = {
                     name: args.name,
                 };
@@ -436,57 +430,7 @@ export function registerPlaylistTools(
 
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "POST",
-                    path: `/users/${me.id}/playlists`,
-                    body,
-                });
-                return toolResponse(data);
-            })
-    );
-
-    server.registerTool(
-        "create_playlist_for_user",
-        {
-            title: "Create Playlist for User",
-            description:
-                "Create a playlist for a specific Spotify user. The playlist will be empty until you add tracks.",
-            inputSchema: {
-                user_id: z
-                    .string()
-                    .describe("The user's Spotify user ID."),
-                name: z.string().describe("The name for the new playlist."),
-                public: z
-                    .boolean()
-                    .optional()
-                    .describe(
-                        "If true, the playlist will be public (default true)."
-                    ),
-                collaborative: z
-                    .boolean()
-                    .optional()
-                    .describe(
-                        "If true, the playlist will be collaborative (default false)."
-                    ),
-                description: z
-                    .string()
-                    .optional()
-                    .describe("Value for playlist description."),
-            },
-            annotations: WRITE_ANNOTATIONS,
-        },
-        (args) =>
-            withErrorHandling("create_playlist_for_user", async () => {
-                const body: Record<string, unknown> = {
-                    name: args.name,
-                };
-                if (args.public !== undefined) body.public = args.public;
-                if (args.collaborative !== undefined)
-                    body.collaborative = args.collaborative;
-                if (args.description !== undefined)
-                    body.description = args.description;
-
-                const data = await spotifyRequest(mcpAccessToken, {
-                    method: "POST",
-                    path: `/users/${args.user_id}/playlists`,
+                    path: "/me/playlists",
                     body,
                 });
                 return toolResponse(data);

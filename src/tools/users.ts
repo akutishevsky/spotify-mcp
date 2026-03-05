@@ -110,27 +110,16 @@ export function registerUserTools(
                 playlist_id: z
                     .string()
                     .describe("The Spotify ID of the playlist."),
-                public: z
-                    .boolean()
-                    .optional()
-                    .describe(
-                        "If true, the playlist will be included in the user's public playlists (default true)."
-                    ),
             },
             annotations: WRITE_ANNOTATIONS,
         },
         (args) =>
             withErrorHandling("follow_playlist", async () => {
-                const body: Record<string, unknown> = {};
-                if (args.public !== undefined) body.public = args.public;
-
+                const uri = `spotify:playlist:${args.playlist_id}`;
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: `/playlists/${args.playlist_id}/followers`,
-                    body:
-                        Object.keys(body).length > 0
-                            ? body
-                            : undefined,
+                    path: "/me/library",
+                    query: { uris: uri },
                 });
                 return toolResponse(data);
             })
@@ -151,9 +140,11 @@ export function registerUserTools(
         },
         (args) =>
             withErrorHandling("unfollow_playlist", async () => {
+                const uri = `spotify:playlist:${args.playlist_id}`;
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "DELETE",
-                    path: `/playlists/${args.playlist_id}/followers`,
+                    path: "/me/library",
+                    query: { uris: uri },
                 });
                 return toolResponse(data);
             })
@@ -223,11 +214,14 @@ export function registerUserTools(
         },
         (args) =>
             withErrorHandling("follow_artists_or_users", async () => {
+                const uris = args.ids
+                    .split(",")
+                    .map((s) => `spotify:${args.type}:${s.trim()}`)
+                    .join(",");
                 const data = await spotifyRequest(mcpAccessToken, {
                     method: "PUT",
-                    path: "/me/following",
-                    query: { type: args.type },
-                    body: { ids: args.ids.split(",").map((s) => s.trim()) },
+                    path: "/me/library",
+                    query: { uris },
                 });
                 return toolResponse(data);
             })
@@ -257,15 +251,14 @@ export function registerUserTools(
             withErrorHandling(
                 "unfollow_artists_or_users",
                 async () => {
+                    const uris = args.ids
+                        .split(",")
+                        .map((s) => `spotify:${args.type}:${s.trim()}`)
+                        .join(",");
                     const data = await spotifyRequest(mcpAccessToken, {
                         method: "DELETE",
-                        path: "/me/following",
-                        query: { type: args.type },
-                        body: {
-                            ids: args.ids
-                                .split(",")
-                                .map((s) => s.trim()),
-                        },
+                        path: "/me/library",
+                        query: { uris },
                     });
                     return toolResponse(data);
                 }
@@ -296,12 +289,13 @@ export function registerUserTools(
             withErrorHandling(
                 "check_following_artists_or_users",
                 async () => {
+                    const uris = args.ids
+                        .split(",")
+                        .map((s) => `spotify:${args.type}:${s.trim()}`)
+                        .join(",");
                     const data = await spotifyRequest(mcpAccessToken, {
-                        path: "/me/following/contains",
-                        query: {
-                            type: args.type,
-                            ids: args.ids,
-                        },
+                        path: "/me/library/contains",
+                        query: { uris },
                     });
                     return toolResponse(data);
                 }
@@ -325,8 +319,10 @@ export function registerUserTools(
             withErrorHandling(
                 "check_following_playlist",
                 async () => {
+                    const uri = `spotify:playlist:${args.playlist_id}`;
                     const data = await spotifyRequest(mcpAccessToken, {
-                        path: `/playlists/${args.playlist_id}/followers/contains`,
+                        path: "/me/library/contains",
+                        query: { uris: uri },
                     });
                     return toolResponse(data);
                 }
