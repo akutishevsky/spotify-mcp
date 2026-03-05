@@ -2,6 +2,8 @@
 
 A remote [Model Context Protocol](https://modelcontextprotocol.io) server that provides full coverage of the [Spotify Web API](https://developer.spotify.com/documentation/web-api). Built with [Bun](https://bun.sh), [Hono](https://hono.dev), and [Supabase](https://supabase.com).
 
+**Live server:** [sptfy-mcp.online](https://sptfy-mcp.online)
+
 ## Features
 
 - **85+ tools** covering 100% of the Spotify Web API
@@ -10,6 +12,9 @@ A remote [Model Context Protocol](https://modelcontextprotocol.io) server that p
 - **Automatic token refresh** — Spotify tokens are refreshed transparently
 - **Encrypted storage** — all Spotify tokens encrypted at rest with AES-256-GCM
 - **Supabase backend** — persistent storage for tokens, sessions, and clients
+- **Tool analytics** — anonymous usage tracking with 90-day retention
+- **Scheduled cleanup** — automatic purge of expired tokens, sessions, and analytics
+- **Landing page** with live health status
 
 ## Tools
 
@@ -30,6 +35,8 @@ A remote [Model Context Protocol](https://modelcontextprotocol.io) server that p
 | Shows | 7 | Get show, episodes, save/remove/check |
 | Tracks | 11 | Get track, audio features/analysis, recommendations |
 | Users | 11 | Profile, top items, follow/unfollow |
+
+All save/remove/check library operations use the new unified Spotify `/me/library` endpoint with Spotify URIs.
 
 ## Prerequisites
 
@@ -60,12 +67,12 @@ Fill in the values:
 | `SPOTIFY_CLIENT_ID` | From your Spotify Developer Dashboard |
 | `SPOTIFY_CLIENT_SECRET` | From your Spotify Developer Dashboard |
 | `SPOTIFY_REDIRECT_URI` | Must match your Spotify app settings (e.g. `http://localhost:3000/callback`) |
-| `ENCRYPTION_SECRET` | 32-byte hex key — generate with `openssl rand -hex 32` |
+| `ENCRYPTION_SECRET` | 32-byte hex key — generate with `bun run generate:secret` |
 | `SUPABASE_URL` | Your Supabase project URL |
 | `SUPABASE_SECRET_KEY` | Your Supabase service role key |
 | `PORT` | Server port (default: `3000`) |
 
-### 3. Run Supabase migration
+### 3. Run Supabase migrations
 
 Apply the database schema to your Supabase project:
 
@@ -73,7 +80,11 @@ Apply the database schema to your Supabase project:
 supabase db push
 ```
 
-Or run the SQL manually from `supabase/migrations/001_initial_schema.sql` in the Supabase SQL editor.
+Or run the SQL files manually from `supabase/migrations/` in the Supabase SQL editor:
+1. `001_initial_schema.sql` — Core tables (mcp_tokens, oauth_sessions, auth_codes, registered_clients) with RLS
+2. `002_fix_rls_policies.sql` — Tighten RLS policies
+3. `003_tool_analytics.sql` — Tool analytics table with indexes
+4. `004_add_granted_scopes.sql` — Granted scopes tracking on mcp_tokens
 
 ### 4. Start the server
 
@@ -87,22 +98,22 @@ This server acts as an OAuth2 proxy between MCP clients and Spotify:
 
 ```
 MCP Client                    Spotify MCP Server                 Spotify
-    │                               │                               │
-    ├── POST /register ────────────►│                               │
-    │◄── client_id ─────────────────┤                               │
-    │                               │                               │
-    ├── GET /authorize ────────────►│                               │
-    │                               ├── redirect to Spotify ───────►│
-    │                               │◄── callback with code ────────┤
-    │◄── redirect with MCP code ────┤                               │
-    │                               │                               │
-    ├── POST /token ───────────────►│                               │
-    │                               ├── exchange code ─────────────►│
-    │                               │◄── Spotify tokens ────────────┤
-    │◄── MCP access token ──────────┤                               │
-    │                               │                               │
-    ├── POST /mcp (with Bearer) ───►│── Spotify API calls ─────────►│
-    │◄── tool results ──────────────┤◄── API responses ─────────────┤
+    |                               |                               |
+    |-- POST /register ----------->|                               |
+    |<-- client_id ----------------|                               |
+    |                               |                               |
+    |-- GET /authorize ----------->|                               |
+    |                               |-- redirect to Spotify ------>|
+    |                               |<-- callback with code -------|
+    |<-- redirect with MCP code ---|                               |
+    |                               |                               |
+    |-- POST /token -------------->|                               |
+    |                               |-- exchange code ------------>|
+    |                               |<-- Spotify tokens -----------|
+    |<-- MCP access token ---------|                               |
+    |                               |                               |
+    |-- POST /mcp (with Bearer) -->|-- Spotify API calls -------->|
+    |<-- tool results -------------|<-- API responses ------------|
 ```
 
 ## MCP Client Configuration
@@ -128,22 +139,30 @@ The client will be guided through OAuth registration and authorization on first 
 
 | Endpoint | Method | Description |
 |---|---|---|
+| `/` | GET | Landing page with live health status |
 | `/register` | POST | Dynamic OAuth client registration |
 | `/authorize` | GET | Start OAuth authorization flow |
 | `/callback` | GET | Spotify OAuth callback |
 | `/token` | POST | Exchange auth code for MCP token |
 | `/mcp` | POST/GET/DELETE | MCP Streamable HTTP transport |
-| `/health` | GET | Health check |
+| `/health` | GET | Health check (JSON) |
 | `/.well-known/oauth-authorization-server` | GET | OAuth server metadata |
 
-## Development
+## Scripts
 
 ```bash
-bun run dev        # Start with hot reload
-bun run lint       # Run ESLint
-bun run lint:fix   # Auto-fix lint issues
-bun run format     # Format with Prettier
+bun run dev              # Start with hot reload
+bun run start            # Production start
+bun run lint             # Run ESLint
+bun run lint:fix         # Auto-fix lint issues
+bun run format           # Format with Prettier
+bun run generate:secret  # Generate encryption key
+bun run inspector        # Launch MCP Inspector
 ```
+
+## Deployment
+
+The server includes a `Dockerfile` for container-based deployments (e.g. Digital Ocean App Platform). The `idleTimeout` is set to 255 seconds to support long-lived SSE streams.
 
 ## License
 
