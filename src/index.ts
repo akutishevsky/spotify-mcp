@@ -49,4 +49,5 @@ console.log(`Spotify MCP server running on port ${port}`);
 export default {
     port,
     fetch: app.fetch,
+    idleTimeout: 255, // Max allowed by Bun (seconds) — needed for SSE streams
 };
