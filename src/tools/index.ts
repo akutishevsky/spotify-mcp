@@ -172,8 +172,12 @@ export async function withErrorHandling(
         const durationMs = Math.round(performance.now() - startTime);
         const now = new Date();
 
-        tokenStore.getTokens(currentMcpToken).then((tokens) => {
-            const userId = tokens?.spotifyUserId || "unknown";
+        tokenStore.getTokens(currentMcpToken).then(async (tokens) => {
+            const raw = tokens?.spotifyUserId || "unknown";
+            const hash = new Bun.CryptoHasher("sha256")
+                .update(raw)
+                .digest("hex");
+            const userId = hash.slice(0, 16);
             persistAnalytics({
                 spotify_user_id: userId,
                 tool_name: toolName,
