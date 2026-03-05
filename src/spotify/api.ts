@@ -44,7 +44,7 @@ async function getAccessToken(mcpToken: string): Promise<string> {
             logger.error("Token refresh failed", {
                 error: String(error),
             });
-            throw new Error(`Failed to refresh access token: ${error}`);
+            throw new Error(`Failed to refresh access token: ${error}`, { cause: error });
         }
     }
 
