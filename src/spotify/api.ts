@@ -59,14 +59,10 @@ export interface SpotifyRequestOptions {
     contentType?: string;
 }
 
-export async function spotifyRequest<T = unknown>(
-    mcpToken: string,
-    options: SpotifyRequestOptions
-): Promise<T> {
-    const accessToken = await getAccessToken(mcpToken);
-    const { method = "GET", path, query, body, contentType } = options;
-
-    // Build URL with query params
+function buildUrl(
+    path: string,
+    query?: Record<string, string | number | boolean | undefined>
+): URL {
     const url = new URL(`${SPOTIFY_API_BASE}${path}`);
     if (query) {
         for (const [key, value] of Object.entries(query)) {
@@ -75,19 +71,50 @@ export async function spotifyRequest<T = unknown>(
             }
         }
     }
+    return url;
+}
 
-    // Build headers
+function resolveContentType(
+    body: unknown,
+    contentType?: string
+): string | undefined {
+    if (contentType) return contentType;
+    if (body && typeof body !== "string") return "application/json";
+    return undefined;
+}
+
+async function parseErrorResponse(response: Response): Promise<never> {
+    const errorBody = await response.text();
+    let errorMessage: string;
+    try {
+        const errorJson = JSON.parse(errorBody);
+        errorMessage =
+            errorJson.error?.message ||
+            errorJson.error_description ||
+            errorBody;
+    } catch {
+        errorMessage = errorBody;
+    }
+    throw new Error(
+        `Spotify API error (${response.status}): ${errorMessage}`
+    );
+}
+
+export async function spotifyRequest<T = unknown>(
+    mcpToken: string,
+    options: SpotifyRequestOptions
+): Promise<T> {
+    const accessToken = await getAccessToken(mcpToken);
+    const { method = "GET", path, query, body, contentType } = options;
+
+    const url = buildUrl(path, query);
+
     const headers: Record<string, string> = {
         Authorization: `Bearer ${accessToken}`,
     };
+    const resolved = resolveContentType(body, contentType);
+    if (resolved) headers["Content-Type"] = resolved;
 
-    if (contentType) {
-        headers["Content-Type"] = contentType;
-    } else if (body && typeof body !== "string") {
-        headers["Content-Type"] = "application/json";
-    }
-
-    // Build fetch options
     const fetchOptions: RequestInit = { method, headers };
     if (body) {
         fetchOptions.body =
@@ -96,34 +123,11 @@ export async function spotifyRequest<T = unknown>(
 
     const response = await fetch(url.toString(), fetchOptions);
 
-    // Handle no-content responses (204)
-    if (response.status === 204) {
-        return { success: true } as T;
-    }
+    if (response.status === 204) return { success: true } as T;
+    if (!response.ok) await parseErrorResponse(response);
 
-    // Handle error responses
-    if (!response.ok) {
-        const errorBody = await response.text();
-        let errorMessage: string;
-        try {
-            const errorJson = JSON.parse(errorBody);
-            errorMessage =
-                errorJson.error?.message ||
-                errorJson.error_description ||
-                errorBody;
-        } catch {
-            errorMessage = errorBody;
-        }
-        throw new Error(
-            `Spotify API error (${response.status}): ${errorMessage}`
-        );
-    }
-
-    // Handle empty responses
     const text = await response.text();
-    if (!text) {
-        return { success: true } as T;
-    }
+    if (!text) return { success: true } as T;
 
     return JSON.parse(text) as T;
 }

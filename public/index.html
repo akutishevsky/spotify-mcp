@@ -69,11 +69,11 @@
     </div>
 
     <script>
-      async function checkHealth() {
-        const dot = document.getElementById("status-dot");
-        const text = document.getElementById("status-text");
-        const details = document.getElementById("status-details");
+      const dot = document.getElementById("status-dot");
+      const text = document.getElementById("status-text");
+      const details = document.getElementById("status-details");
 
+      async function checkHealth() {
         try {
           const start = performance.now();
           const res = await fetch("/health");

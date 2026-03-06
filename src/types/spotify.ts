@@ -25,7 +25,7 @@ export interface SpotifyFollowers {
 }
 
 export interface SpotifyRestrictions {
-    reason: "market" | "product" | "explicit" | string;
+    reason: string;
 }
 
 export interface SpotifyCopyright {
@@ -278,8 +278,10 @@ export interface SpotifyPlaylistTrack {
     added_at: string | null;
     added_by: SpotifyPublicUser | null;
     is_local: boolean;
-    track: SpotifyTrack | SpotifyEpisode | null;
+    track: SpotifyPlayableItem | null;
 }
+
+export type SpotifyPlayableItem = SpotifyTrack | SpotifyEpisode;
 
 export interface SpotifyFeaturedPlaylists {
     message: string;
@@ -477,7 +479,7 @@ export interface SpotifyPlaybackState {
     timestamp: number;
     progress_ms: number | null;
     is_playing: boolean;
-    item: SpotifyTrack | SpotifyEpisode | null;
+    item: SpotifyPlayableItem | null;
     currently_playing_type: "track" | "episode" | "ad" | "unknown";
     actions: { disallows: SpotifyActions };
 }
@@ -487,14 +489,14 @@ export interface SpotifyCurrentlyPlaying {
     timestamp: number;
     progress_ms: number | null;
     is_playing: boolean;
-    item: SpotifyTrack | SpotifyEpisode | null;
+    item: SpotifyPlayableItem | null;
     currently_playing_type: "track" | "episode" | "ad" | "unknown";
     actions: { disallows: SpotifyActions };
 }
 
 export interface SpotifyQueue {
-    currently_playing: SpotifyTrack | SpotifyEpisode | null;
-    queue: (SpotifyTrack | SpotifyEpisode)[];
+    currently_playing: SpotifyPlayableItem | null;
+    queue: SpotifyPlayableItem[];
 }
 
 export interface SpotifyPlayHistory {

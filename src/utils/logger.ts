@@ -1,4 +1,4 @@
-const redactedFields = [
+const redactedFields = new Set([
     "token",
     "access_token",
     "refresh_token",
@@ -27,7 +27,7 @@ const redactedFields = [
     "apiKey",
     "api_key",
     "secret",
-];
+]);
 
 const LOG_LEVELS = {
     trace: 10,
@@ -40,8 +40,8 @@ const LOG_LEVELS = {
 type LogLevel = keyof typeof LOG_LEVELS;
 
 class Logger {
-    private level: number;
-    private context: Record<string, unknown>;
+    private readonly level: number;
+    private readonly context: Record<string, unknown>;
 
     constructor(context: Record<string, unknown> = {}) {
         const envLevel = (
@@ -57,7 +57,7 @@ class Logger {
 
         const redacted: any = {};
         for (const [key, value] of Object.entries(obj)) {
-            if (redactedFields.includes(key)) {
+            if (redactedFields.has(key)) {
                 redacted[key] = "[REDACTED]";
             } else if (typeof value === "object" && value !== null) {
                 redacted[key] = this.redact(value);
@@ -73,7 +73,7 @@ class Logger {
 
         const levelStr = level.toUpperCase().padEnd(5);
         const component = this.context.component
-            ? `[${this.context.component}] `
+            ? `[${String(this.context.component)}] `
             : "";
         let output = `${levelStr} ${component}${message}`;
 
