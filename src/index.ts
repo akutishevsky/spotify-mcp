@@ -42,7 +42,7 @@ const app = createApp({ oauthConfig });
 // Start background cleanup for expired records
 startCleanupScheduler();
 
-const port = parseInt(process.env.PORT || "3000", 10);
+const port = Number.parseInt(process.env.PORT || "3000", 10);
 
 console.log(`Spotify MCP server running on port ${port}`);
 
