@@ -1,5 +1,15 @@
 # Spotify MCP Server
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=akutishevsky_spotify-mcp&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=akutishevsky_spotify-mcp)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=akutishevsky_spotify-mcp&metric=bugs)](https://sonarcloud.io/summary/new_code?id=akutishevsky_spotify-mcp)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=akutishevsky_spotify-mcp&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=akutishevsky_spotify-mcp)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=akutishevsky_spotify-mcp&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=akutishevsky_spotify-mcp)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=akutishevsky_spotify-mcp&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=akutishevsky_spotify-mcp)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=akutishevsky_spotify-mcp&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=akutishevsky_spotify-mcp)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=akutishevsky_spotify-mcp&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=akutishevsky_spotify-mcp)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=akutishevsky_spotify-mcp&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=akutishevsky_spotify-mcp)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=akutishevsky_spotify-mcp&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=akutishevsky_spotify-mcp)
+
 A remote [Model Context Protocol](https://modelcontextprotocol.io) server that provides full coverage of the [Spotify Web API](https://developer.spotify.com/documentation/web-api). Built with [Bun](https://bun.sh), [Hono](https://hono.dev), and [Supabase](https://supabase.com).
 
 **Live server:** [sptfy-mcp.online](https://sptfy-mcp.online)
