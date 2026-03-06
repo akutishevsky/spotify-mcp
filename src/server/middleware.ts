@@ -9,7 +9,7 @@ export const authenticateBearer = async (c: AppContext, next: AppNext) => {
     const path = c.req.path;
     const method = c.req.method;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!authHeader?.startsWith("Bearer ")) {
         logger.warn(
             `Authentication failed on ${method} ${path}: missing or invalid authorization header`
         );

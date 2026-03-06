@@ -73,7 +73,10 @@ interface RegisteredClientRow {
 }
 
 class OAuthStore {
-    async init(): Promise<void> {}
+    // Required by OAuthServerProvider interface — no initialization needed
+    async init(): Promise<void> {
+        // intentionally empty
+    }
 
     async storeSession(
         sessionId: string,
@@ -466,7 +469,7 @@ export function createOAuthRouter(config: OAuthConfig) {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    Authorization: `Basic ${btoa(`${config.clientId}:${config.clientSecret}`)}`,
+                    Authorization: `Basic ${btoa(config.clientId + ":" + config.clientSecret)}`,
                 },
                 body: new URLSearchParams({
                     grant_type: "authorization_code",
@@ -555,7 +558,7 @@ export async function refreshSpotifyToken(
         method: "POST",
         headers: {
             "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Basic ${btoa(`${config.clientId}:${config.clientSecret}`)}`,
+            Authorization: `Basic ${btoa(config.clientId + ":" + config.clientSecret)}`,
         },
         body: new URLSearchParams({
             grant_type: "refresh_token",
